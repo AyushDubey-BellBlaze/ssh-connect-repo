@@ -1,0 +1,31 @@
+name: Connect EC2 via SSH
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  ssh-job:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create SSH Private Key File
+        run:
+          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          chmod 600 private-key.pem
+      - name: Connect to EC2 and Execute Commands
+        run:
+          ssh -o StrictHostKeyChecking=no -i private_key.pem \
+          ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            echo "Hello From GitHub Action "
+            echo "Ayush Dubey"
+            echo "Connected Successfully"
+            echo "Task is Completed"
+            hostname
+            pwd
+            date
+          EOF
