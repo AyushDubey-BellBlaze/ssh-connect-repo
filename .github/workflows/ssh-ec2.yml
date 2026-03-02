@@ -15,8 +15,9 @@ jobs:
 
       - name: Create SSH Private Key File
         run:
-          echo "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
+          printf "%s" "${{ secrets.EC2_SSH_KEY }}" > private_key.pem
           chmod 600 private-key.pem
+          ls -l private_key.pem
       - name: Connect to EC2 and Execute Commands
         run:
           ssh -o StrictHostKeyChecking=no -i private_key.pem \
